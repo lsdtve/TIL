@@ -60,7 +60,7 @@ public class UserService {
    컴포넌트 스캔의 원리는 기본적으로 `@Component` 어노테이션이 있으면 자동으로 스프링 빈으로 등록된다.
 
    참고로, `@Component` 어노테이션은` @Controller` , `@Service`, `@Repository`를 포함한다.
-   
+
 2. **자바 코드로 직접 스프링 빈 등록하기**
 
    `@Configuration` 어노테이션을 추가하고, 스프링 빈으로 등록하고자 하는 Service와 Repository에 `@Bean` 어노테이션을 추가하면, 스프링 빈으로 등록된다.
@@ -68,3 +68,36 @@ public class UserService {
 3. **XML로 스프링 빈 등록하기**
 
    최근에는 거의 사용하지 않는다.
+   
+   
+
+Spring-Boot는 어노테이션을 통해 Bean을 설정하고 주입받는 것을 표준으로 삼는다.
+
+```text
+- @Bean은 개발자가 컨트롤 할 수 없는 외부 라이브러리 Bean으로 등록하고 싶은 경우 (메소드로 return 되는 객체를 Bean으로 등록) 
+- @Component는 개발자가 직접 컨트롤할 수 있는 클래스(직접 만든)를 Bean으로 등록하고 싶은 경우 (선언된 Class를 Bean으로 등록) 
+- @Controller, @Service, @Repository 등 은 @Component를 비즈니스 레이어에 따라 명칭을 달리 지정해준 것Container에 있는 Spring Bean을 찾아 주입시켜주는 Annotation
+```
+
+
+
+### 장점
+
+- 스프링 IoC 컨테이너에 등록된 Bean들은 **의존성 관리**가 수월해진다. 
+- 스프링 IoC 컨테이너에 등록된 Bean들은 **싱글톤**의 형태이다
+
+
+
+# @Autowired
+
+`@Autowired` 는 각 상황의 타입에 맞는 IoC컨테이너 안에 존재하는 Bean을 자동으로 주입해주게 됩니다.
+
+- required: 기본값은 true (따라서 못 찾으면 애플리케이션 구동 실패)
+
+
+
+### 사용할 수 있는 위치
+
+- 생성자 (스프링 4.3 부터는 생략 가능)
+- 세터
+- 필드
