@@ -65,7 +65,7 @@ public class UserService {
 
    `@Configuration` 어노테이션을 추가하고, 스프링 빈으로 등록하고자 하는 Service와 Repository에 `@Bean` 어노테이션을 추가하면, 스프링 빈으로 등록된다.
 
-3. **XML로 스프링 빈 등록하기**
+3. ~~**XML로 스프링 빈 등록하기**~~
 
    최근에는 거의 사용하지 않는다.
    
@@ -86,6 +86,11 @@ Spring-Boot는 어노테이션을 통해 Bean을 설정하고 주입받는 것�
 - 스프링 IoC 컨테이너에 등록된 Bean들은 **의존성 관리**가 수월해진다. 
 - 스프링 IoC 컨테이너에 등록된 Bean들은 **싱글톤**의 형태이다
 
+```text
+singleton : 기본(Default) 싱글톤 스코프. 하나의 Bean 정의에 대해서 Container 내에 단 하나의 객체만 존재한다.
+prototype : 어플리케이션에서 요청시 (getBean()) 마다 스프링이 새 인스턴스를 생성
+```
+
 
 
 # @Autowired
@@ -99,5 +104,191 @@ Spring-Boot는 어노테이션을 통해 Bean을 설정하고 주입받는 것�
 ### 사용할 수 있는 위치
 
 - 생성자 (스프링 4.3 부터는 생략 가능)
+
+  ```java
+  public class UserService {
+    
+    UserRepository userRepository;
+    
+    @Autowired
+    public UserService(UserRepository userRepository) {
+      this.userRepository = userRepository;
+    }
+  }
+  ```
 - 세터
+
+  ```java
+  public class UserService {
+    
+    UserRepository userRepository;
+    
+    @Autowired
+    public setUserService(UserRepository userRepository) {
+      this.userRepository = userRepository;
+    }
+  }
+  ```
 - 필드
+
+  ```java
+  public class UserService {
+    
+    @Autowired
+    UserRepository userRepository;
+  }
+  ```
+
+
+
+
+### 가능한 경우의 수 
+
+- ~~해당 타입의 빈이 없는 경우~~
+- **해당 타입의 빈이 한 개인 경우**
+- ~~해당 타입의 빈이 여러 개인 경우~~
+  - ~~빈 이름 으로 시도~~,
+    - **같은 이름의 빈 찾으면 해당 빈 사용**
+    - ~~같은 이름 못 찾으면 실패~~
+
+ 
+
+### 같은 타입의 빈이 여러개 일 때
+
+- `@Primary`
+- 해당 타입의 빈 모두 주입 받기
+- `@Qualifier` (빈 이름으로 주입)
+
+
+
+# 빈 스코프
+
+`빈 스코프` 는 빈이 관리되는 범위를 뜻한다.
+
+- `싱글톤`: **기본 스코프**, 스프링 컨테이너의 시작과 종료까지 유지되는 가장 넓은 범위의 스코프이다.
+
+- `프로토타입`: 스프링 컨테이너는 프로토타입 빈의 생성과 의존관계 주입까지만 관여하고 더는 관리하지 않는 매우 짧은 범위의 스코프이다(따라서 빈 콜백중 종료메서드가 호출이 안된다.).
+
+- 웹 관련 스코프
+  - `request`: 웹 요청이 들어오고 나갈때 까지 유지되는 스코프이다.
+  - `session`: 웹 세션이 생성되고 종료될 때 까지 유지되는 스코프이다.
+  - `application`: 웹의 서블릿 컨텍스와 같은 범위로 유지되는 스코프이다.
+
+
+
+### 싱글톤 객체 사용시 주의할 점
+
+- 프로퍼티가 공유
+- ApplicationContext 초기 구동시 인스턴스 생성.
+
+
+
+# Environment 기능
+
+`ApplicationContext`는 `BeanFactory` 기능 말고도 여러가지 기능을 가지고 있다.
+
+`ApplicationContext`는 `EnvironmentCapable`를 상속받고 있다.
+
+
+
+EnvironmentCapable은 2가지 기능이 있다.
+
+1. `프로파일`
+2. `프로퍼티`
+
+
+
+### 프로파일 기능
+
+**Profile이란** 스프링에서 특정 Profile에서만 특정한 빈을 등록하고 싶다거나, 애플리케이션 동작을 특정 Profile에서 설정을 다르게 하고 싶을 때 사용하는 기능이다.
+
+Environmet는 활성화 할 프로파일을 확인하고 설정해주는 것이다.
+
+기본적으로는 default 프로파일로 설정되어있다.
+
+
+
+#### 프로파일 정의하기
+
+-  클래스에 정의
+
+   - @Configuration @Profile(“test”)
+
+   -  @Component @Profile(“test”)
+
+-  메소드에 정의
+
+   - @Bean @Profile(“test”)
+
+```java
+@Profile("test")
+@Configuration
+public class TestConfiguration {
+    @Bean
+    public String test() {
+        return "test!";
+    }
+}
+```
+
+
+
+#### 프로파일 표현식
+
+- ! (not)
+
+- & (and)
+- |(or)
+
+
+
+### 프로퍼티 기능
+
+어플리케이션에 등록되어 있는 여러 key-value로 제공되는 프로퍼티에 접근할 수 있는 기능이다.
+
+여러 프로퍼티들은 계층형구조이다.(우선 순위가 존재한다는 뜻)
+
+
+
+resources 디렉토리에 `~.properties` 파일을 만들어 사용한다.
+
+```java
+my.email = lsdtve@gmail.com
+```
+
+다음과 같이 key-value 꼴로 값을 미리정해놓을 수 있다.
+
+
+
+```java
+@Configuration
+@PropertySource("classpath:/app.proerties")
+public class TestConfig {
+  
+}
+```
+
+`@PropertySource` 라는 어노테이션을 사용해서 이 어플리케이션이 만들어준 app.properties 파일을 참조할 수 있도록 한다.
+
+
+
+##### getProperty
+
+`Environment` 객체의 `getProperty` 메소드를 이용해서 프로퍼티 값을 가져올 수 있다.
+
+.properties 파일의 key에 해당하는 값으로 값을 가져온다.
+
+```java
+@Component
+public class TestComponent {
+  
+  @Autowired
+  Environment environment;
+  
+  @PostConstruct
+  public void print() {
+    System.out.println(environment.getProperty("my.email"));
+  }
+}
+```
+
