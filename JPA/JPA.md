@@ -22,7 +22,7 @@
 
 - 하이버네이트, EclipseLink, DataNucleus
 
-![jpa인터페이스](/Users/baeyong-gyun/IdeaProjects/TIL/JPA/JPA.assets/jpa인터페이스-6735131.png)
+![jpa인터페이스](JPA.assets/jpa인터페이스-6735131.png)
 
 ### JPA 버전
 
@@ -36,11 +36,11 @@
 
 - JPA는 애플리케이션과 JDBC 사이에서 동작
 
-![jpa-basic-structure](/Users/baeyong-gyun/IdeaProjects/TIL/JPA/JPA.assets/jpa-basic-structure.png)
+![jpa-basic-structure](JPA.assets/jpa-basic-structure.png)
 
 ##### 	저장과정
 
-![jpa-insert-structure](/Users/baeyong-gyun/IdeaProjects/TIL/JPA/JPA.assets/jpa-insert-structure.png)
+![jpa-insert-structure](JPA.assets/jpa-insert-structure.png)
 
 - MemberDAO에서 객체를 저장할때
   1. JPA에 Entity Object를 넘긴다
