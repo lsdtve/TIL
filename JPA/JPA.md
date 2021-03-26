@@ -22,7 +22,7 @@
 
 - 하이버네이트, EclipseLink, DataNucleus
 
-![jpa인터페이스](JPA.assets/jpa인터페이스-6735131.png)
+![jpa인터페이스](JPA.assets/jpa-interface.png)
 
 ### JPA 버전
 
