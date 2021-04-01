@@ -205,7 +205,7 @@ query.getResultList();
 
 
 
-##  경로 표현식
+####  경로 표현식
 
 - .(점)을 찍어 객체 그래프를 탐색하는 것
 
@@ -250,6 +250,81 @@ query.getResultList();
 - **명시적 조인**
   : join 키워드를 직접 사용하는 것
 
-  명시적인 조인을 사용하는 것이 좋다!
+  명시적인 조인을 사용하는 것이 좋다!!
 
+
+
+
+### 페치 조인(fetch join)
+
+- JPQL에서 성능 최적화를 위해 제공하는 기능
+
+- 연관된 엔티티나 컬렉션을 SQL 한 번에 함께 조회할 수 있다
+
+  ```sql
+  select m from Member m join fetch m.team
+  ```
+
+- **`join fetch`** 명령어 사용
+
+- SQL을 한번에 날려 Temp도 함께 SELECT 한다.
+
+  ![image-20210401165837092](images/image-20210401165837092.png)
+
+```java
+String jpql = "select m from Member m join fetch m.team"; 
+List<Member> members = em.createQuery(jpql, Member.class)
+  .getResultList(); 
+```
+
+
+
+#### [특징]
+
+- 연관된 엔티티들을 SQL 한 번으로 조회 - 성능 최적화
+- 엔티티에 직접 적용하는 글로벌 로딩 전략보다 우선함
+- 페치 조인은 객체 그래프를 유지할 때 사용하면 효과적
+
+
+
+#### DISTINCT
+
+-  SQL의 DISTINCT는 중복된 결과를 제거하는 명령
+  -  JPQL에서는 객체 중심이라서 중복 엔티티를 제거해줄 수 없음
+- JPQL에서 새롭게 DISTINCT를 제공
+  - SQL에 DISTINCT 기능
+  - **애플리케이션에서 엔티티 중복 제거**
+
+
+
+### 벌크 연산
+
+- JPA 변경 감지 기능으로 실행하려면 너무 많은 SQL을 실행한다
+
+  변경된 데이터가 100개면 100번의 UPDATE SQL을 실행하게된다
+
+- 벌크 연산은 쿼리 한 번으로 여러 테이블 로우 변경을 한다.
+
+- UPDATE, DELETE 지원
+
+- `executeUpdate()` 는 쿼리 작성후 실행 결과는 영향받은 엔티티 수 반환
+
+  ```java
+String qlString = "update Product p " +
+  									"set p.price = p.price * 1.1 " +
+                    "where p.stockAmount < :stockAmount";
   
+  int resultCount = em.createQuery(qlString)
+                      .setParameter("stockAmount", 10)
+                      .executeUpdate();
+  ```
+  
+  
+  
+  
+
+#### [주의]
+
+- 벌크 연산은 영속성 컨텍스트를 무시하고 데이터베이스에 직접 쿼리
+  - 벌크 연산을 먼저 실행
+  - 벌크 연산 수행 후 영속성 컨텍스트 초기화
