@@ -63,8 +63,3 @@
   -  (null 인지 모르고 사용할 수 있으므로)
 
 - 프리미티브 타입용 Optional은 따로 있다, ex) `OptionalInt`, `OptionalLong`
-
-
-```
-
-```
