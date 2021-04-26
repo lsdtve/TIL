@@ -8,6 +8,7 @@
 
 - [IoC (Inversion of Control)](https://github.com/lsdtve/TIL/blob/main/Spring/IOC.md)
 - [AOP](https://github.com/lsdtve/TIL/blob/main/Spring/AOP.md)
+- [예외 (Exception)](https://github.com/lsdtve/TIL/blob/main/Spring/Exception.md)
 
 
 
@@ -25,4 +26,9 @@
 
 
 # Java
+
+- [Optional](https://github.com/lsdtve/TIL/blob/main/Java/Optional.md)
+- [Stream](https://github.com/lsdtve/TIL/blob/main/Java/Stream.md)
+
+- [함수형 인터페이스 & Lambda](https://github.com/lsdtve/TIL/blob/main/Java/함수형 인터페이스 %26 Lambda.md)
 
